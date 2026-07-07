@@ -1,13 +1,14 @@
 # AI Cipher Decoder
 
-An AI-powered tool for encrypting, decrypting, and auto-cracking classical ciphers — Caesar, Atbash, Affine, Vigenère, Hill, Nihilist, Baconian, Porta, Pollux, Morbit, Fractionated Morse, Aristocrats, Patristocrats, Xenocrypts, and more — with a chatbot that explains each step so users learn the underlying technique, not just get an answer.
+An AI-powered tool for encrypting, decrypting, and auto-cracking classical ciphers — Caesar, Atbash, Affine, Vigenère, Hill, Nihilist, Baconian, Porta, Pollux, Morbit, Fractionated Morse, Aristocrats, Patristocrats, Xenocrypts, and more — plus a solver for cryptarithms (puzzles like `SEND + MORE = MONEY`). A chatbot explains each step so users learn the underlying technique, not just get an answer.
 
 ## How it works
 
-The project has two parts working together:
+The project has three parts working together:
 
 1. **A deterministic cipher engine** — pure math/code that encrypts and decrypts any cipher when the key is known. No AI involved, just correct implementations of each algorithm.
 2. **A cryptanalysis solver** — for ciphers meant to be "cracked" without a key (mainly Aristocrats/Patristocrats and Vigenère), using frequency analysis, quadgram scoring, and hill-climbing/simulated annealing search. This is the actual AI/ML part of the project.
+3. **A cryptarithm solver** — solves letter-arithmetic puzzles (e.g. `SEND + MORE = MONEY`, where each letter stands for a unique digit) using constraint-satisfaction search rather than language-frequency techniques.
 
 ## Why this project
 
@@ -29,13 +30,16 @@ ai-cipher-decoder-frontend/
 ├── index.html          # landing page
 ├── practice.html        # practice mode (timer, random ciphertext, reveal steps)
 ├── solve.html            # manual encrypt/decrypt tool
+├── cryptarithm.html      # cryptarithm puzzle solver (SEND + MORE = MONEY style)
 ├── chat.html             # chatbot interface
 ├── css/                  # per-page + shared styles
+│   └── cryptarithm.css
 ├── js/
 │   ├── api.js             # fetch wrappers calling the backend
 │   ├── ciphers-ui.js       # shared cipher-selector logic
 │   ├── solve.js
 │   ├── practice.js
+│   ├── cryptarithm.js      # puzzle input parsing + rendering solved digit mapping
 │   ├── chat.js
 │   └── utils.js
 └── assets/
@@ -49,9 +53,10 @@ ai-cipher-decoder-backend/
 │   ├── main.py            # FastAPI entrypoint
 │   ├── ciphers/            # keyed encrypt/decrypt for every supported cipher
 │   ├── solvers/             # quadgram scoring, hill-climbing, Aristocrat/Vigenère crackers
+│   │   └── cryptarithm_solver.py  # constraint-satisfaction solver for letter-arithmetic puzzles
 │   ├── data/                 # English + Spanish quadgram frequency tables
 │   ├── chatbot/               # Anthropic API client, tool definitions, orchestrator
-│   ├── routes/                 # /encrypt, /decrypt, /solve, /chat endpoints
+│   ├── routes/                 # /encrypt, /decrypt, /solve, /cryptarithm, /chat endpoints
 │   └── tests/
 ├── requirements.txt
 └── .env.example
@@ -90,6 +95,7 @@ Then visit `http://localhost:5500`. Make sure `js/api.js` points at your backend
 - [ ] Phase 2 — Aristocrat/Patristocrat auto-solver (quadgram + hill-climbing)
 - [ ] Phase 2 — Vigenère auto-solver (Kasiski + Index of Coincidence)
 - [ ] Phase 2 — Xenocrypt (Spanish) solver
+- [ ] Phase 2 — Cryptarithm solver (constraint-satisfaction search over letter-digit assignments)
 - [ ] Phase 3 — Chatbot orchestration via Anthropic API tool use
 - [ ] Phase 4 — Practice mode with timer and step-by-step reveal
 - [ ] Deploy frontend (Netlify/Vercel/GitHub Pages) + backend (Render/Railway)
